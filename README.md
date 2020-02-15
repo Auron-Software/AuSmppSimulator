@@ -12,5 +12,6 @@ With this SMPP Simulator you can test:
   - Randomly generate delivery report status distributions
   - Automatically send template messages at given TPS
   - Automatically echo template messages
+  - Etc...
 
 SMPP is used for sending and receiving SMS text messages through the internet. The procol is designed for high performance and used between SMSC's and aggregators as well business software that connects directly to an SMS provider or SMSC.
