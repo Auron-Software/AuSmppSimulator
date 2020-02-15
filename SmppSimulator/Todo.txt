@@ -1,0 +1,28 @@
+Voor nieuwe Release:
+Done 1) Received count label + logica in worker
+Done 2) Bericht delete, cursor opnieuw zetten zodat delete knop gespammed kan worden!
+Done 3) Template bestaande berichten editen (dubbel klik)
+Done 4) Clear knop vervangen door edit
+Done 5) Queuing op basis van queue grote session (mega) 
+Done 6) Error terug geven bij faalde submit (Status)
+Done 7) Gooi die error code ook in de log
+Done 8) Dubbel klik details bericht
+Done 9) Queue vol label rood (3x lijst niet leeg)
+Done 10) Logvelden opslaan
+
+
+
+Voor versie 2:
+
+Hoeft niet 1)
+	SimMessage.SimSession
+	Veranderen naar:
+	SimSession.lsSimMessages
+
+Done 2) Deliveryreports
+3) optie voor failed berichten / DeliveryReports
+4) Serverlogfile check
+
+
+(Grote wijziging!)
+
