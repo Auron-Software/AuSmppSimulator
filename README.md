@@ -25,7 +25,7 @@ To build the Auron SMPP Simulator from source you will need:
  
 The Auron SMS Component is also available as a [NuGet package](https://www.nuget.org/packages/AxSms/).
 
-## Limitiation
+## Limitations
 This project is freeware with the limitation that every 15 messages a small '- Auron Software' ad is appended to an outgoing SMS message.
 
 To remove this limitation you will need to purchase a professional license of the SMS Component. 
