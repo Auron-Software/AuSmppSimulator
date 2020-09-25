@@ -4,6 +4,7 @@ Auron Software SMPP Simulator. SMPP Server for load testing SMPP client software
 ## Overview
 This is an easy to use C# Windows Forms based SMPP Server (SMSC) simulator. It is released by [Auron Software](https://www.auronsoftware.com) as an open-source project. It makes use of the Auron Software SMS Component for the SMPP server implementation.
 
+[Find full documentation and product description here](https://www.auronsoftware.com/products/auron-smpp-simulator/).
 [Find a stand-alone windows installer here](https://www.auronsoftware.com/download/).
 
 With this SMPP Simulator you can test:
