@@ -72,7 +72,7 @@
       <Value Profile="(Default)">30000</Value>
     </Setting>
     <Setting Name="UseGsmEncoding" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">-6</Value>
     </Setting>
     <Setting Name="MultipartMode" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>

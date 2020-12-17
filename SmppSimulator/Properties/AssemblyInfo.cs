@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Auron")]  // %SWITCH|%COMPANY%|Auron%
 [assembly: AssemblyProduct("SMPP Simulator")] 
-[assembly: AssemblyCopyright("Copyright ©")] // %SWITCH|%COPYRIGHT%|%
+[assembly: AssemblyCopyright("Copyright ©")] // %SWITCH||%
 
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

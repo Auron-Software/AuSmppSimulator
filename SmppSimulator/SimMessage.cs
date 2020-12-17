@@ -32,6 +32,7 @@ namespace SmppSimulator
         private int m_nTotalParts;
         private int m_nPartNumber;
         private int m_nMultipartReference;
+        private int m_nLanguageShift;
         private List<SimTlv> m_lsTlvs = new List<SimTlv>();
 
         private int m_nSessionId;
@@ -97,6 +98,11 @@ namespace SmppSimulator
         {
             get { return m_nDataCoding; }
             set { m_nDataCoding = value; }
+        }
+        public int LanguageShift
+        {
+            get { return m_nLanguageShift; }
+            set { m_nLanguageShift = value; }
         }
         public int BodyFormat
         {
@@ -195,6 +201,7 @@ namespace SmppSimulator
             m_nTotalParts = objOther.m_nTotalParts;
             m_nPartNumber = objOther.m_nPartNumber;
             m_nMultipartReference = objOther.m_nMultipartReference;
+            m_nLanguageShift = objOther.m_nLanguageShift;
 
             m_nSessionId = objOther.m_nSessionId;
             m_strSystemId = objOther.m_strSystemId;
@@ -227,6 +234,7 @@ namespace SmppSimulator
             m_nTotalParts = objMessage.TotalParts;
             m_nPartNumber = objMessage.PartNumber;
             m_nMultipartReference = objMessage.MultipartRef;
+            m_nLanguageShift = objMessage.LanguageSingleShift;
 
             AxSms.Tlv objTlv = objMessage.SmppGetFirstTlv();
             while (objMessage.LastError == 0)
@@ -254,6 +262,8 @@ namespace SmppSimulator
             objResult.HasUdh = HasUdh;            
             objResult.SmppIsDeliveryReport = IsDeliveryReport;
             objResult.SmppCommandStatus = CommandStatus;
+            objResult.LanguageSingleShift = LanguageShift;
+            objResult.LanguageLockingShift = LanguageShift;
 
             foreach (SimTlv objTlv in Tlvs)
             {

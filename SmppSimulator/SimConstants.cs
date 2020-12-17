@@ -47,6 +47,7 @@ namespace SmppSimulator
     public const string XML_AUTOMESSAGE_FIELD_ISDLR = "IsDeliveryReport";
     public const string XML_AUTOMESSAGE_FIELD_DATACODING = "DataCoding";
     public const string XML_AUTOMESSAGE_FIELD_BODYFORMAT = "BodyFormat";
+    public const string XML_AUTOMESSAGE_FIELD_LANGUAGESHIFT = "LanguageShift";
 
     public const string XML_AUTOMESSAGE_ELEMENT_TLV = "Tlv";
     public const string XML_AUTOMESSAGE_FIELD_TAG = "Tag";

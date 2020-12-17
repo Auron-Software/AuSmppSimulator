@@ -66,6 +66,7 @@ namespace SmppSimulator
       dctGsmEncoding.Add("SMPP_USEGSMENCODING_OUTGOING", m_objConstants.SMPP_USEGSMENCODING_OUTGOING);
       dctGsmEncoding.Add("SMPP_USEGSMENCODING_INCHARSET", m_objConstants.SMPP_USEGSMENCODING_INCHARSET);
       dctGsmEncoding.Add("SMPP_USEGSMENCODING_OUTCHARSET", m_objConstants.SMPP_USEGSMENCODING_OUTCHARSET);
+      dctGsmEncoding.Add("SMPP_USEGSMENCODING_INOUTCHARS", m_objConstants.SMPP_USEGSMENCODING_INOUTCHARS);
       cbxGsmEncoding.DisplayMember = "Key";
       cbxGsmEncoding.ValueMember = "Value";
       cbxGsmEncoding.DataSource = new BindingSource(dctGsmEncoding, null);

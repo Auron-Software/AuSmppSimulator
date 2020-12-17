@@ -93,7 +93,13 @@ namespace SmppSimulator
     private void frmMain_Load(object sender, EventArgs e)
     {
       var objSettings = Settings.Default;
+
+      // force save settings right away
+      objSettings.LastReference = objSettings.LastReference;
+      objSettings.Save();
+      
       m_Logger = new Logger(objSettings.ViewLogFile);
+      m_Logger.WriteLine("Startup SMPP Simulator");
 
       m_objSimWorker = new SimWorker();
       m_objSimModel = m_objSimWorker.SimModel;
@@ -171,8 +177,9 @@ namespace SmppSimulator
         AddToAutoMessage(new SimMessage("+123123123", SimConstants.DEFAULT_FROMADDRESS, "Hello, World!"));
         AddToAutoMessage(objMessage = new SimMessage("+321321321", SimConstants.DEFAULT_FROMADDRESS, "مرحبا، العالم"));
         objMessage.DataCoding = m_objSmsConstants.DATACODING_UNICODE;
-        AddToAutoMessage(objMessage = new SimMessage("+231231231", SimConstants.DEFAULT_FROMADDRESS, "你好, 世界"));
-        objMessage.DataCoding = m_objSmsConstants.DATACODING_UNICODE;
+        AddToAutoMessage(objMessage = new SimMessage("+231231231", SimConstants.DEFAULT_FROMADDRESS, "नमस्ते दुनिया"));
+        objMessage.DataCoding = m_objSmsConstants.DATACODING_DEFAULT;
+        objMessage.LanguageShift = m_objSmsConstants.LANGUAGE_SINGLESHIFT_HINDI;
         AddToAutoMessage(objMessage = new SimMessage("+123123123", SimConstants.DEFAULT_FROMADDRESS, "48656c6c6f2c20576f726c6421"));
         objMessage.BodyFormat = m_objSmsConstants.BODYFORMAT_HEX;
       }
@@ -546,7 +553,7 @@ namespace SmppSimulator
       if (lvSessions.SelectedItems.Count == 0) return;
 
       SimSession objSession = (SimSession)lvSessions.SelectedItems[0].Tag;
-      frmSmsMessage frm = new frmSmsMessage(objSession, null, frmSmsMessage.EFrmType.SEND, m_objSimModel.MultipartMode);
+      frmSmsMessage frm = new frmSmsMessage(objSession, null, frmSmsMessage.EFrmType.SEND, m_objSimModel.MultipartMode, m_objSimModel.UseGsmEncoding);
       if (frm.ShowDialog() == DialogResult.OK)
       {
         SimMessage objMessage = frm.Message;
@@ -575,7 +582,7 @@ namespace SmppSimulator
 
     private void btnAddAutoMessage_Click(object sender, EventArgs e)
     {
-      frmSmsMessage frm = new frmSmsMessage(null, null, frmSmsMessage.EFrmType.CREATE, m_objSimModel.MultipartMode);
+      frmSmsMessage frm = new frmSmsMessage(null, null, frmSmsMessage.EFrmType.CREATE, m_objSimModel.MultipartMode, m_objSimModel.UseGsmEncoding);
       if (frm.ShowDialog() == DialogResult.OK) AddToAutoMessage(frm.Message);
       PushAutoMessages();
     }
@@ -585,7 +592,7 @@ namespace SmppSimulator
       if (lvAutoMessage.SelectedItems.Count <= 0) return;
 
       SimMessage objMessage = (SimMessage)lvAutoMessage.SelectedItems[0].Tag;
-      frmSmsMessage frm = new frmSmsMessage(null, objMessage, frmSmsMessage.EFrmType.EDIT, m_objSimModel.MultipartMode);
+      frmSmsMessage frm = new frmSmsMessage(null, objMessage, frmSmsMessage.EFrmType.EDIT, m_objSimModel.MultipartMode, m_objSimModel.UseGsmEncoding);
       if (frm.ShowDialog() == DialogResult.OK)
       {
         ListViewItem lvi = lvAutoMessage.SelectedItems[0];
@@ -642,6 +649,7 @@ namespace SmppSimulator
             objMessage.IsDeliveryReport = bool.Parse(objXml[SimConstants.XML_AUTOMESSAGE_FIELD_ISDLR]);
             objMessage.DataCoding = int.Parse(objXml[SimConstants.XML_AUTOMESSAGE_FIELD_DATACODING]);
             objMessage.BodyFormat = int.Parse(objXml[SimConstants.XML_AUTOMESSAGE_FIELD_BODYFORMAT]);
+            objMessage.LanguageShift = int.Parse(objXml[SimConstants.XML_AUTOMESSAGE_FIELD_LANGUAGESHIFT]);
             lsAutoMsg.Add(objMessage);
           }
           else if (objXml.NodeType == XmlNodeType.Element &&
@@ -703,6 +711,7 @@ namespace SmppSimulator
           objXmlWriter.WriteAttributeString(SimConstants.XML_AUTOMESSAGE_FIELD_ISDLR, objMessage.IsDeliveryReport.ToString());
           objXmlWriter.WriteAttributeString(SimConstants.XML_AUTOMESSAGE_FIELD_BODYFORMAT, objMessage.BodyFormat.ToString());
           objXmlWriter.WriteAttributeString(SimConstants.XML_AUTOMESSAGE_FIELD_DATACODING, objMessage.DataCoding.ToString());
+          objXmlWriter.WriteAttributeString(SimConstants.XML_AUTOMESSAGE_FIELD_LANGUAGESHIFT, objMessage.LanguageShift.ToString());
           foreach (SimTlv objTlv in objMessage.Tlvs)
           {
             objXmlWriter.WriteStartElement(SimConstants.XML_AUTOMESSAGE_ELEMENT_TLV);
@@ -852,7 +861,7 @@ namespace SmppSimulator
       ListViewItem[] lvs = lvSessions.Items.Find(objMessage.SessionId.ToString(), false);
       if (lvs.Length > 0) objSession = (SimSession)lvs[0].Tag;
 
-      frmSmsMessage frm = new frmSmsMessage(objSession, objMessage, frmSmsMessage.EFrmType.VIEW, m_objSimModel.MultipartMode);
+      frmSmsMessage frm = new frmSmsMessage(objSession, objMessage, frmSmsMessage.EFrmType.VIEW, m_objSimModel.MultipartMode, m_objSimModel.UseGsmEncoding);
 
       // if it's a multipart message, try to find the rest of the parts as well
       if (objMessage.TotalParts > 1)

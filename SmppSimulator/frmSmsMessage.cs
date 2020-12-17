@@ -40,13 +40,14 @@ namespace SmppSimulator
             set { m_objSmsAsm = value; }
         }
 
-        public frmSmsMessage(SimSession objSession, SimMessage objMessage, EFrmType eType, int nMultipartMode)
+        public frmSmsMessage(SimSession objSession, SimMessage objMessage, EFrmType eType, int nMultipartMode, int nUseGsmEncoding)
         {
             InitializeComponent();
 
             m_objConstants = new AxSms.Constants();
             m_objSmsAsm = new AxSms.Smpp();
             m_objSmsAsm.MultipartMode = nMultipartMode;
+            m_objSmsAsm.UseGsmEncoding = nUseGsmEncoding;
             m_eFrmType = eType;
 
             switch (m_eFrmType)
@@ -144,6 +145,26 @@ namespace SmppSimulator
             cbxDataCoding.ValueMember = "Value";
             cbxDataCoding.DataSource = new BindingSource(dctDataCoding, null);
 
+            var dctLanguageShift = new Dictionary<String, int>();
+            dctLanguageShift.Add("Basic"     , m_objConstants.LANGUAGE_SINGLESHIFT_BASIC);
+            dctLanguageShift.Add("Turkish"   , m_objConstants.LANGUAGE_SINGLESHIFT_TURKISH);
+            dctLanguageShift.Add("Portuguese", m_objConstants.LANGUAGE_SINGLESHIFT_SPANISH);
+            dctLanguageShift.Add("Spanish"   , m_objConstants.LANGUAGE_SINGLESHIFT_PORTUGUESE);
+            dctLanguageShift.Add("Bengali"   , m_objConstants.LANGUAGE_SINGLESHIFT_BENGALI);
+            dctLanguageShift.Add("Gujarati"  , m_objConstants.LANGUAGE_SINGLESHIFT_GUJARATI);
+            dctLanguageShift.Add("Hindi"     , m_objConstants.LANGUAGE_SINGLESHIFT_HINDI);
+            dctLanguageShift.Add("Kannada"   , m_objConstants.LANGUAGE_SINGLESHIFT_KANNADA);
+            dctLanguageShift.Add("Malayalam" , m_objConstants.LANGUAGE_SINGLESHIFT_MALAYALAM);
+            dctLanguageShift.Add("Oriya"     , m_objConstants.LANGUAGE_SINGLESHIFT_ORIYA);
+            dctLanguageShift.Add("Punjabi"   , m_objConstants.LANGUAGE_SINGLESHIFT_PUNJABI);
+            dctLanguageShift.Add("Tamil"     , m_objConstants.LANGUAGE_SINGLESHIFT_TAMIL);
+            dctLanguageShift.Add("Telugu"    , m_objConstants.LANGUAGE_SINGLESHIFT_TELUGU);
+            dctLanguageShift.Add("Urdu"      , m_objConstants.LANGUAGE_SINGLESHIFT_URDU);
+
+            cbxLanguageShift.DisplayMember = "Key";
+            cbxLanguageShift.ValueMember = "Value";
+            cbxLanguageShift.DataSource = new BindingSource(dctLanguageShift, null);
+
             // Setup TLV table
             lvTlvs.Columns.Add("Tag", 230, HorizontalAlignment.Left);
             lvTlvs.Columns.Add("Type", 115, HorizontalAlignment.Left);
@@ -157,6 +178,7 @@ namespace SmppSimulator
             cbxToNpi.SelectedValue = m_objMessage.ToAddressNpi;
             cbxToTon.SelectedValue = m_objMessage.ToAddressTon;
             cbxDataCoding.SelectedValue = m_objMessage.DataCoding;
+            cbxLanguageShift.SelectedValue = m_objMessage.LanguageShift;
             cbxBodyFormat.SelectedValue = m_objMessage.BodyFormat;
             cbUDH.Checked = m_objMessage.HasUdh;
             cbDeliveryReport.Checked = m_objMessage.IsDeliveryReport;
@@ -235,6 +257,7 @@ namespace SmppSimulator
             m_objMessage.ToAddressTon = (int)cbxToTon.SelectedValue;
             m_objMessage.DataCoding = (int)cbxDataCoding.SelectedValue;
             m_objMessage.BodyFormat = (int)cbxBodyFormat.SelectedValue;
+            m_objMessage.LanguageShift = (int)cbxLanguageShift.SelectedValue;
             m_objMessage.HasUdh = cbUDH.Checked;
             m_objMessage.IsDeliveryReport = cbDeliveryReport.Checked;
             m_objMessage.Body = strBody;
@@ -254,6 +277,10 @@ namespace SmppSimulator
 
         public void UpdateControls()
         {
+            bool bNoNls = cbxDataCoding.SelectedValue != null && 
+              (((int)cbxDataCoding.SelectedValue & m_objConstants.DATACODING_UNICODE) == m_objConstants.DATACODING_UNICODE ||
+              ((int)cbxDataCoding.SelectedValue & m_objConstants.DATACODING_8BIT_DATA) == m_objConstants.DATACODING_8BIT_DATA);
+
             txtToAddress.Enabled = m_eFrmType != EFrmType.VIEW;
             cbxToNpi.Enabled = m_eFrmType != EFrmType.VIEW;
             cbxToTon.Enabled = m_eFrmType != EFrmType.VIEW;
@@ -262,6 +289,7 @@ namespace SmppSimulator
             cbxFromTon.Enabled = m_eFrmType != EFrmType.VIEW;
             cbxDataCoding.Enabled = m_eFrmType != EFrmType.VIEW;
             cbxBodyFormat.Enabled = m_eFrmType != EFrmType.VIEW;
+            cbxLanguageShift.Enabled = m_eFrmType != EFrmType.VIEW && !bNoNls;
             cbUDH.Enabled = m_eFrmType != EFrmType.VIEW;
             cbDeliveryReport.Enabled = m_eFrmType != EFrmType.VIEW;            
             btAdd.Enabled = btEdit.Enabled = btRemove.Enabled = m_eFrmType != EFrmType.VIEW;
@@ -281,8 +309,8 @@ namespace SmppSimulator
 
             AxSms.Message objSms = new AxSms.Message();
             objSms.ToAddress = "1234567890";    // make up a 'ToAddress' to pass validation
-            objSms.BodyFormat = (int)cbxBodyFormat.SelectedValue;
-            objSms.DataCoding = (int)cbxDataCoding.SelectedValue;
+            objSms.BodyFormat = cbxBodyFormat.SelectedValue == null ? 0: (int)cbxBodyFormat.SelectedValue;
+            objSms.DataCoding = cbxDataCoding.SelectedValue == null ? 0: (int)cbxDataCoding.SelectedValue;
             objSms.HasUdh = cbUDH.Checked;
 
             string strText = txtBody.Text;
