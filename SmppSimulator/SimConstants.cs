@@ -27,7 +27,7 @@ namespace SmppSimulator
     public const string MESSAGE_STATE_DENIED = "Denied";
 
     //ActiveXperts SMS Component required build.
-    public const string AXSMS_REQ_BUILD = "6.5";
+    public const string AXSMS_REQ_BUILD = "6.6";
 
     // Message Direction Constants
     public const string MESSAGE_DIRECTION_OUT = "Out";
