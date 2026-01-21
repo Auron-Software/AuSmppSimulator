@@ -259,7 +259,8 @@ namespace SmppSimulator
       var sCertficateName = objSmppServer.FindFirstMyServerCertificate();
       while (objSmppServer.LastError == 0)
       {
-        dctCertficates.Add(sCertficateName, sCertficateName);
+        if (!dctCertficates.ContainsKey(sCertficateName))
+          dctCertficates.Add(sCertficateName, sCertficateName);
         sCertficateName = objSmppServer.FindNextMyServerCertificate();
       }
       if (objSmppServer.LastError != SimConstants.ERRORCODE_NOMORE_CERTIFICATES)
